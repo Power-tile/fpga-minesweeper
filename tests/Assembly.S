@@ -1,24 +1,26 @@
 ADD $1, $0, $0
 ADDI $1, $1, 1
-ADD $3, $0, $0
-JUMP 16           // Jumps to addi 7
-ADDI $3, $3, 1
-ADDI $1, $1, 3
-ADDI $1, $1, 4
-ADDI $1, $1, 5
-ADDI $1, $1, 6
-ADDI $1, $1, 7
-ADDI $1, $1, 8
-ADDI $1, $1, 9
-ADDI $1, $1, 10
-ADDI $1, $1, 11
-JUMP 40           // Jumps to addi 5
+JUMP 8
+ADDI $1, $0, 10
+ADDI $1, $1, 1	// Jump 4 goes here
+ADDI $1, $1, 1
+ADDI $1, $1, 1
+ADDI $1, $1, 1
+ADDI $1, $1, 1
+ADDI $1, $1, 1
+ADDI $1, $1, 1
+ADDI $1, $1, 1
+ADDI $1, $1, 1
 ADD $2, $0, $0
+JUMP 40
 ADDI $2, $2, 2
-ADDI $2, $2, 3
-ADDI $2, $2, 14
-ADDI $2, $2, -15
-ADDI $2, $2, 6
-ADDI $2, $2, 5
-BEQ $3, $0, -4
-HALT
+ADDI $2, $2, 2
+ADDI $2, $2, 2
+ADDI $2, $2, -10
+ADDI $2, $2, 2
+ADDI $2, $2, 2	// Jump 40 goes here
+BNE $2, $0, 6
+JUMP 50
+ADD $2, $2, $2
+JUMP 44
+ADDI $2, $2, -2	// BNE goes here
