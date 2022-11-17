@@ -42,7 +42,7 @@ always @(*) begin
 	end
 	else if(jmp) begin
 		// Check if amount is good
-		NextPC <= Iin[9:0];	
+		NextPC <= {1'b0, Iin[9:1]};	
 	end
 	else if(MP) begin
 		// Unsure
