@@ -75,7 +75,7 @@ def main():
     print("  input  [7:0]  ADDR;");
     print("  output [15:0] Q;");
     print("");
-    print("  reg     [15:0] mem[0:127]; // instruction memory with 16 bit entries");
+    print("  reg     [15:0] mem[0:512]; // instruction memory with 16 bit entries");
     print("");
     print("  wire    [6:0]  saddr;");
     print("  integer        i;");
@@ -92,7 +92,7 @@ def main():
 
     if (num_insts < 127):
         print("");
-        print("        for(i = " + str(num_insts) + "; i < 128; i = i + 1) begin");
+        print("        for(i = " + str(num_insts) + "; i < 512; i = i + 1) begin");
         print("         mem[i] <= 16'b0000000000000000;");
         print("        end");
 
@@ -108,7 +108,7 @@ def usage():
 
 # Generate one instruction
 def parse_instruction(lineNum):
-    assert (lineNum < 128), "Too many instructions - can only have 128 total."
+    assert (lineNum < 512), "Too many instructions - can only have 512 total."
 
     instr = program[lineNum]
 
@@ -132,6 +132,14 @@ def parse_instruction(lineNum):
         print("0000000000000000", end = '');
     elif (instruction == 'HALT'):
         print("0000000000000001", end = '');
+    elif (instruction == 'JUMP'):
+        #Extra decoding
+        instr[2] = instr[2].strip(')')
+        tmp_instr = instr[2].split('(')
+        instr[2] = tmp_instr[1]
+        instr.append(tmp_instr[0]) #Gotta love my hax
+        imm = int(instr[1])
+        print("0001" + immString(imm) + "00", end = '');
     elif (instruction == 'LB'):
         #Extra decoding
         instr[2] = instr[2].strip(')')
