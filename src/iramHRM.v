@@ -4,7 +4,7 @@ module iramHRM(CLK, RESET, ADDR, Q);
   input  [7:0]  ADDR;
   output [15:0] Q;
 
-  reg    [15:0] mem[0:127]; // instruction memory with 16 bit entries
+  reg    [15:0] mem[0:255]; // instruction memory with 16 bit entries
 
   wire   [6:0]  saddr;
   integer       i;
