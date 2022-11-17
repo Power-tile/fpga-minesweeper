@@ -41,7 +41,8 @@ always @(*) begin
 		NextPC <= PC;
 	end
 	else if(jmp) begin
-		NextPC <= {Iin[8:0], 1'b0};	
+		// Check if amount is good
+		NextPC <= Iin[9:0];	
 	end
 	else if(MP) begin
 		// Unsure
