@@ -1,6 +1,6 @@
 ADD $1, $0, $0
 ADDI $1, $1, 1
-JUMP 8
+JUMP 4
 ADDI $1, $0, 10
 ADDI $1, $1, 1	// Jump 4 goes here
 ADDI $1, $1, 1
@@ -12,15 +12,17 @@ ADDI $1, $1, 1
 ADDI $1, $1, 1
 ADDI $1, $1, 1
 ADD $2, $0, $0
-JUMP 40
+JUMP 20
 ADDI $2, $2, 2
 ADDI $2, $2, 2
 ADDI $2, $2, 2
 ADDI $2, $2, -10
 ADDI $2, $2, 2
-ADDI $2, $2, 2	// Jump 40 goes here
+ADDI $2, $2, 2	// Jump 20 goes here
 BNE $2, $0, 6
-JUMP 50
+JUMP 25
 ADD $2, $2, $2
-JUMP 44
+JUMP 22
 ADDI $2, $2, -2	// BNE goes here
+// $1 = 10
+// $2 = 0
