@@ -6,6 +6,7 @@ def Game(map,moves):
     n = 6
     #The number of mines
     # k = 7
+    # mine map generated
     minesweeper_map = [[0 for row in range(n)] for column in range(n)]
     for x in range(n):
         for y in range(n):
@@ -46,62 +47,70 @@ def Game(map,moves):
     player_map = [['-' for row in range(n)] for column in range(n)]
     x = 0
     y = 0
+    testFrame = 0
+    prevButtonDown = 0
+    dead = False
+    timerStart = 0
+    move = 0
+
 ##CheckWon
-    while True:
+    while not dead and testFrame < size(moves)[1]:
+        if timerStart == 1:
+            timerStart = 0
+
         Won = True
-        for row in player_map:
-            for cell in row:
-                if cell == '-':
+        for i in range(n):
+            for j in range(n):
+                player_cell = player_map[i][j]
+                game_cell = minesweeper_map[i][j]
+                if player_cell == '-' or (player_cell == '?' and game_cell != 'X'):
                     Won = False
+                    break # jump out of the double loop
+            else:
+                break
                            
         if Won == False:
-            #Detect Move
-            time_elapsed = 0
-            time_start = 0
-            while True:
-                #Continue moves
-                # print("Enter your cell you want to open(left, right, up, down, center) :")
-                # move = input()
-                for move in moves:
-                    if (move == "left" and x-1 >= 0):
-                        x -= 1
-                        time_start = 1
-                    elif (move == "right" and x+1 < n):
-                        x += 1
-                        time_start = 1
-                    elif (move == "up" and y - 1 >= 0):
-                        y -= 1
-                        time_start = 1
-                    elif (move == "down" and y + 1 < n):
-                        y += 1
-                        time_start = 1
-                    elif (move == "center"):
-                        # simulate the elasped time for another click
-                        print("Time that elapsed (s) :")
-                        time_elapsed = input()
-                        if float(time_elapsed) > 0.1: 
-                            time_start = 0   
-                    else:
-                        print("Enter Valid Move Again")
-                if time_start == 1:
+            currInput = moves[testFrame][:]
+            if prevButtonDown == 0: # no button pressed before
+                for buttonIdx in range(5):
+                    if currInput[buttonIdx] == 1:
+                        prevButtonDown = buttonIdx + 1
                         break
-                else:
+            else: # button pressed before
+                if currInput[prevButtonDown - 1] == 0: # click
+                    move = prevButtonDown
+                    prevButtonDown = 0
+
+                    if prevButtonDown == 5 and currInput[-1] == 1: # center double click
+                        move = 6
+                    else: # regular click, start timer
+                        timerStart = 1
+
+            if (move == 1 and x-1 >= 0): # L
+                x -= 1
+            elif (move == 2 and x+1 < n): # R
+                x += 1
+            elif (move == 3 and y - 1 >= 0): # U
+                y -= 1
+            elif (move == 4 and y + 1 < n): # D
+                y += 1
+            elif (move == 5): # C
+                if player_map[y][x] == '?':
+                    player_map[y][x] = '-'
+                elif player_map[y][x] == '-':
                     player_map[y][x] = '?'
-                    break    
+            elif (move == 6): # double click on center
+                player_map[y][x] = minesweeper_map[y][x]
 
+            if player_map[y][x] == 'X':
+                dead = True
+            for row in player_map if not dead else minesweeper_map:
+                for cell in row:
+                    print(cell)
+                print('\n')
 
-            if (minesweeper_map[y][x] == 'X' and time_start == 1 ):
-                print("Game Over!")
-                for row in minesweeper_map:
-                    print(" ".join(str(cell) for cell in row))
-                    print("")
-                return minesweeper_map
-            else:
-                if(player_map[y][x] != '?'):
-                    player_map[y][x] = minesweeper_map[y][x]
-                for row in player_map:
-                    print(" ".join(str(cell) for cell in row))
-                    print("")
+            move = 0
+            testFrame += 1
 
         else:
             for row in player_map:
