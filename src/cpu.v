@@ -34,7 +34,7 @@ reg prevEN_L;
 
 	
 	// I added jmp
-wire jmp
+reg jmp;
 // BRANCH LOGIC
 always @(*) begin
 	if(HALT & (~prevEN_L | EN_L)) begin
