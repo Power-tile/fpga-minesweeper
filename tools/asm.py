@@ -139,7 +139,7 @@ def parse_instruction(lineNum):
         instr[2] = tmp_instr[1]
         instr.append(tmp_instr[0]) #Gotta love my hax
         imm = int(instr[1])
-        print("0001" + immString(imm) + "00", end = '');
+        print("0001" + "00" + immString(imm), end = '');
     elif (instruction == 'LB'):
         #Extra decoding
         instr[2] = instr[2].strip(')')
