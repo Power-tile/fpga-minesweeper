@@ -44,7 +44,7 @@ module iramHRM(CLK, RESET, ADDR, Q);
       mem[26]  <= 16'b0010010011000001;   // LB   R3, 1(R2)
       mem[27]  <= 16'b0100000011111111;   // SB   R3, -1(R0)
 
-      for(i = 28; i < 128; i = i + 1) begin
+      for(i = 28; i < 511; i = i + 1) begin
         mem[i] <= 16'b0000000000000000;
       end
     end
