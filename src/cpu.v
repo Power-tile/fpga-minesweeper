@@ -42,7 +42,7 @@ always @(*) begin
 	end
 	else if(jmp) begin
 		// Check if amount is good
-		NextPC <= {1'b0, Iin[9:1]};	
+		NextPC <= {Iin[8:0], 1'b0};	
 	end
 	else if(MP) begin
 		// Unsure
@@ -54,10 +54,12 @@ always @(*) begin
 end
 
 always @(*) begin
-	case(OP)
-		// Added jmp here:
+    	case(OP)
+        // Added jmp here:
 		4'b0001: jmp <= 1'b1;
-		
+		default: jmp <= 1'b0;
+    	endcase
+	case(OP)
 		4'b1000: MP <= Z;
 		4'b1001: MP <= ~Z;
 		4'b1010: MP <= ~N;
