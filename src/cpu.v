@@ -54,6 +54,9 @@ end
 
 always @(*) begin
 	case(OP)
+		// Added jmp here:
+		4'b0001: jmp <= 1'b1;
+		
 		4'b1000: MP <= Z;
 		4'b1001: MP <= ~Z;
 		4'b1010: MP <= ~N;
@@ -110,9 +113,6 @@ end
 
 always @(*) begin
 	case(OP)
-		// Added jmp here:
-		4'b0001: jmp <= 1'b1;
-		
 		4'b0010: MB <= 1'b1;
 		4'b0100: MB <= 1'b1;
 		4'b0101: MB <= 1'b1;
