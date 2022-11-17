@@ -1,4 +1,4 @@
 fpga-minesweeper.runs/**
 fpga-minesweeper.sim/**
 fpga-minesweeper.hw/**
-fpga-minesweeper.ip_user_files/ip/**
+fpga-minesweeper.ip_user_files/**
