@@ -45,8 +45,8 @@ def Game(map,moves):
         
 ## GeneratePlayerMap
     player_map = [['-' for row in range(n)] for column in range(n)]
-    x = 0
-    y = 0
+    x = n // 2
+    y = n // 2
     testFrame = 0
     prevButtonDown = 0
     dead = False
@@ -54,7 +54,7 @@ def Game(map,moves):
     move = 0
 
 ##CheckWon
-    while not dead and testFrame < size(moves)[1]:
+    while not dead and testFrame < len(moves):
         if timerStart == 1:
             timerStart = 0
 
@@ -78,13 +78,17 @@ def Game(map,moves):
                         break
             else: # button pressed before
                 if currInput[prevButtonDown - 1] == 0: # click
-                    move = prevButtonDown
-                    prevButtonDown = 0
+                    if move != -1:
+                        move = prevButtonDown
 
-                    if prevButtonDown == 5 and currInput[-1] == 1: # center double click
+                    if move == -1 and prevButtonDown == 5 and currInput[-1] == 1: # center double click
                         move = 6
-                    else: # regular click, start timer
+                    elif move == 5: # center click, start timer
                         timerStart = 1
+                        move = -1
+                    prevButtonDown = 0
+            if move == -1 and currInput[-1] == 0:
+                move = 5
 
             if (move == 1 and x-1 >= 0): # L
                 x -= 1
@@ -105,19 +109,22 @@ def Game(map,moves):
             if player_map[y][x] == 'X':
                 dead = True
             for row in player_map if not dead else minesweeper_map:
-                for cell in row:
-                    print(cell)
-                print('\n')
+                print("".join(str(cell) for cell in row))
 
-            move = 0
+            print("Curr pos: (%d, %d)" % (y, x));
+            print()
+
+            if move > 0:
+                move = 0
             testFrame += 1
 
         else:
             for row in player_map:
-                print(" ".join(str(cell) for cell in row))
+                print("".join(str(cell) for cell in row))
                 print("")
             print("You have Won!")
             break
+    return x, y, dead, player_map
 # Start of Program
 # if __name__ == "__main__":
 #     try:
