@@ -39,11 +39,14 @@ This is our project on implementing a Minesweeper on a Basys3 FPGA.
     - After the user stops pressing the button, allows the program to "reset" the handler through MMIO to await next user input
   - [ ] Implementing MMIO of handler - Daniel
 - Assembly code for minesweeper
-  - [ ] Figure out how to use Saugata's PMOD OLED driver - Daniel [Thursday]
+  - [X] Figure out how to use Saugata's PMOD OLED driver - Daniel [Thursday]
   - [ ] Write rendering pipeline in Assembly - Daniel
   - [ ] Update pseudocode to make logic easier - Huiyao [Thursday]
     - Read from an input variable holding the user input code (see above); after you processed it, set 1 to acknowledge variable.
-  - [ ] Design DRAM allocation - Daniel [Thursday]
+  - [X] Design DRAM allocation - Daniel [Thursday]
+    - Map information starts from dram[64]. Each map is size 5*8, stored in row-major order. Each tile is `char` wide.
+    - MMIO starts dram[128+64]. Do not write anything after this address.
+    - dram[0~63] is for global variable storage. No stack is available.
   - [ ] Change assembler to support labels in assembly code - Sankar [Thursday]
     - The assembler code guarantees a specific format for labels: `label_for:` and every label has a unique line.
     - Before assembling, read all the labels into a dictionary `string -> instruction number (int)` and delete labels from to-be-assembled string.
