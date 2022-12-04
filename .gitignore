@@ -1,0 +1,7 @@
+fpga-minesweeper.runs/**
+fpga-minesweeper.sim/**
+fpga-minesweeper.hw/**
+fpga-minesweeper.ip_user_files/**
+fpga-minesweeper.cache/**
+.vscode/**
+__pycache__/**
