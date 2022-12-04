@@ -41,11 +41,11 @@ def immString(imm):
      return "{0:{fill}6b}".format(int(imm), fill='0')
  
 #  # Added for jump immediate
-# def immStringJUMP(imm):
-#     assert (imm >= -128 and imm <= 127), "Immediate %d out of range" % imm
-#     if (imm < 0):
-#        imm += 256
-#     return "{0:{fill}6b}".format(int(imm), fill='0')
+def immStringJUMP(imm):
+    assert (imm >= -128 and imm <= 127), "Immediate %d out of range" % imm
+    if (imm < 0):
+       imm += 256
+    return "{0:{fill}6b}".format(int(imm), fill='0')
      
 
 ########################
@@ -165,7 +165,7 @@ def parse_instruction(lineNum, my_dict):
 #         else:
 #             imm = int(my_dict[instr[1]])
 #             program[lineNum][1] = imm
-        print("0001" + "000" + immString(imm), end = '');
+        print("0001" + "000" + immStringJUMP(imm), end = '');
     elif (instruction == 'LB'):
         #Extra decoding
         instr[2] = instr[2].strip(')')
