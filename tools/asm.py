@@ -104,7 +104,7 @@ def main():
 
     if (num_insts < 127):
         print("");
-        print("        for(i = " + str(num_insts) + "; i < 128; i = i + 1) begin");
+        print("        for(i = " + str(num_insts) + "; i < 512; i = i + 1) begin");
         print("         mem[i] <= 16'b0000000000000000;");
         print("        end");
 
