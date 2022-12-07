@@ -5,8 +5,8 @@ module cpu(CLK, RESET, EN_L, Iin, Din, PC, NextPC, DataA, DataB, DataC, DataD, M
   input  [15:0] Iin;
   input  [7:0]  Din;
   
-  output [7:0]  PC;
-  output [7:0]  NextPC;
+	output [9:0]  PC;
+	output [9:0]  NextPC;
   output [7:0]  DataA;
   output [7:0]  DataB;
   output [7:0]  DataC;
@@ -14,8 +14,8 @@ module cpu(CLK, RESET, EN_L, Iin, Din, PC, NextPC, DataA, DataB, DataC, DataD, M
   output        MW;
   
   // comment the two lines out below if you use a submodule to generate PC/NextPC
-  reg [7:0] PC;
-  reg [7:0] NextPC;
+	reg [9:0] PC;
+	reg [9:0] NextPC;
   
   reg MW;
   
@@ -32,20 +32,33 @@ reg MP;
 wire HALT;
 reg prevEN_L;
 
+	
+	// I added jmp
+reg jmp;
 // BRANCH LOGIC
 always @(*) begin
 	if(HALT & (~prevEN_L | EN_L)) begin
 		NextPC <= PC;
 	end
+	else if(jmp) begin
+		// Check if amount is good
+		NextPC <= {Iin[8:0], 1'b0};	
+	end
 	else if(MP) begin
-		NextPC <= PC + 8'd2 + {imm[6:0], 1'b0};
+		// Unsure
+		NextPC <= PC + 10'd2 + {2'b0, {imm[6:0], 1'b0}};
 	end
 	else begin
-		NextPC <= PC + 8'd2;
+		NextPC <= PC + 10'd2;
 	end
 end
 
 always @(*) begin
+    	case(OP)
+        // Added jmp here:
+		4'b0001: jmp <= 1'b1;
+		default: jmp <= 1'b0;
+    	endcase
 	case(OP)
 		4'b1000: MP <= Z;
 		4'b1001: MP <= ~Z;
@@ -70,7 +83,7 @@ end
 // PROGRAM COUNTER
 always @(posedge CLK) begin
 	if(RESET) begin
-		PC <= 8'b0;
+		PC <= 10'b0;
 	end
 	else begin
 		PC <= NextPC;

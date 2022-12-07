@@ -12,10 +12,10 @@ wire        cpuClk, dpEnable, MW;
 
 wire  [3:0] currentDigit;
 
-wire  [7:0] PC, NextPC,
-            IOA, IOB, IOC, IOD,
-            IOE, IOF, IOG, IOH,
-            DataA, DataB, DataC, DataD, Din;
+	wire  [9:0] PC, NextPC;
+	wire  [7:0] IOA, IOB, IOC, IOD,
+		    IOE, IOF, IOG, IOH,
+		    DataA, DataB, DataC, DataD, Din;
 
 wire [15:0] Iin;
 

@@ -134,6 +134,8 @@ def main():
                 print(", R%d" % reg2);
             else:
                 print("");
+        elif (op == "0001"):
+            print("JUMP    %d" % (instr[7:16]));
         elif (op == "0010"):
             print("LB    R%d, %d(R%d)" % (reg2, imm, reg1));
         elif (op == "0100"):
