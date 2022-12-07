@@ -24,4 +24,7 @@ JUMP 25
 ADD $2, $2, $2
 JUMP 22
 ADDI $2, $2, -2
+JUMP MYLABEL
+ADDI $2, $2, 2
+label_for: MYLABEL
 HALT
