@@ -2,7 +2,7 @@ ADD $1, $0, $0
 ADDI $1, $1, 1
 JUMP 4
 ADDI $1, $0, 10
-ADDI $1, $1, 1	// Jump 4 goes here
+ADDI $1, $1, 1	# Jump 4 goes here
 ADDI $1, $1, 1
 ADDI $1, $1, 1
 ADDI $1, $1, 1
@@ -18,11 +18,12 @@ ADDI $2, $2, 2
 ADDI $2, $2, 2
 ADDI $2, $2, -10
 ADDI $2, $2, 2
-ADDI $2, $2, 2	// Jump 20 goes here
-BNE $2, $0, 6
+ADDI $2, $2, 2	# Jump 20 goes here
+BNE $2, $0, 3
 JUMP 25
 ADD $2, $2, $2
 JUMP 22
-ADDI $2, $2, -2	// BNE goes here
-// $1 = 10
-// $2 = 0
+ADDI $2, $2, -2	# BNE goes here
+HALT
+# $1 = 10
+# $2 = 0
