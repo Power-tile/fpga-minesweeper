@@ -101,9 +101,9 @@ def main():
     for i in range(0, num_insts):
         parse_instruction(i, my_dict);
 
-    if (num_insts < 255):
+    if (num_insts < 511):
         print("");
-        print("        for(i = " + str(num_insts) + "; i < 256; i = i + 1) begin");
+        print("        for(i = " + str(num_insts) + "; i < 512; i = i + 1) begin");
         print("         mem[i] <= 16'b0000000000000000;");
         print("        end");
 
@@ -158,11 +158,12 @@ def parse_instruction(lineNum, my_dict):
     elif (instruction == 'HALT'):
         print("0000000000000001", end = '');
     elif (instruction == 'JUMP'):
-        if (instr[1].isdigit()):
-            imm = int(instr[1])
-        else:
-            imm = int(my_dict[instr[1]])
-            program[lineNum][1] = imm
+        imm = int(instr[1])
+#         if (instr[1].isdigit()):
+#             imm = int(instr[1])
+#         else:
+#             imm = int(my_dict[instr[1]])
+#             program[lineNum][1] = imm
         print("0001" + "000" + immStringJUMP(imm), end = '');
     elif (instruction == 'LB'):
         #Extra decoding
