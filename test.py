@@ -15,6 +15,12 @@ class MinesweeperTest(unittest.TestCase):
               [x, y, d, m] = Game(array, moves)
               self.assertEqual((x,y), (2,4))
               self.assertEqual(m[2][2], '?')
+
+       def test_no_move(self):
+              array = [['X','X', '-','-','X','-'],['-','-','X','-','-','-'],['-','-','-','-','X','-'],['-','-','-','X','-','X'],['-','X','-','-','X','-'],['-','-','-','-','-','-']]
+              moves = [0, 0, 0, 0, 2]
+              [x, y, d, m] = Game(array, moves)
+              self.assertEqual((x,y), (0,0))
        
        # def test_simultaneous(self):
        #        array = [['-','X', '-','-','X','-'],['-','-','X','-','-','-'],['-','-','-','-','X','-'],['-','-','-','X','-','X'],['-','X','-','-','X','-'],['-','-','-','-','-','-']]
