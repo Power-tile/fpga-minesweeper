@@ -10,14 +10,14 @@ ADD $3, $0, $0;
 ;    while not dead:
 while:
 BNE $3, $0, skip_jump_end
-JUMP end
+; JUMP end; DEBUG dont jump end what will happen?
 
 skip_jump_end:
 ;        Won = True
-ADDI $4, $0, 1
-;        for i in range(4):
-;            for j in range(4):
-ADD $5, $0, $0; flatten loop to $5
+ADDI $4, $0, 1; won
+ADD $5, $0, $0; i
+
+;        for i in range(64):
 for:
 ADDI $7, $0, 30; add total of 64
 ADDI $7, $7, 30
@@ -26,7 +26,7 @@ BNE $5, $7, skip_jump_for_end
 JUMP for_end
 
 skip_jump_for_end:
-;                player_cell = player_map[i][j]
+;                player_cell = player_map[i]
 ADDI $7, $5, 30; $7 = 64 + $5
 ADDI $7, $7, 30
 ADDI $7, $7, 4
@@ -65,9 +65,8 @@ ADDI $7, $0, -9; ACK
 SB $0, 0($7)
 
 ;        LOAD move;
-ADDI $7, $7, -1;
+ADDI $7, $7, -1; move action
 LB $4, 0($7)
-SB $4, -1($0)
 
 ;        if Won == False:
 BEQ $4, $0, continue_main_if
@@ -242,20 +241,13 @@ ADDI $7, $0, 2
 SB $7, -2(R0)
 game_won:
 JUMP game_won
-;        else:
-;           for row in player_map: ; DONT BOTHER
-;                print("".join(str(cell) for cell in row))
-;                print("")
-;            print("You have Won!")
-;            break
-;    return x, y, dead, player_map
-end:
 
-ADDI $7, $0, 6
+end: ; dead
+ADDI $7, $0, 6 ;
 SB $7, -2(R0)
 game_dead:
 JUMP game_dead
-;; Start of Program
+
 ;; if __name__ == "__main__":
 ;;     try:
 ;;         Game()

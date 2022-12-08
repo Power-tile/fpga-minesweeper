@@ -110,6 +110,9 @@ def main():
             continue
 
         if inst[-1] == ":": # Label
+            if inst[:-1] in label_dict:
+                print("WTF DUPE LABEL")
+                print("inst[:-1]")
             label_dict[inst[:-1]] = currIdx
             program[i] = ""
             continue
