@@ -98,6 +98,7 @@ def main():
     label_dict = dict()
 
     comment_char = ";"
+    currIdx = 0
     for i in range(num_insts):
         inst = program[i]
         if inst.find(comment_char) != -1: # Strip comment
@@ -109,13 +110,22 @@ def main():
             continue
 
         if inst[-1] == ":": # Label
-            label_dict[inst[:-1]] = i
+            label_dict[inst[:-1]] = currIdx
             program[i] = ""
+            continue
+        
+        currIdx += 1
+    
     program = list(inst for inst in program if len(inst) > 0)
     
     num_insts = len(program)
     for i in range(0, num_insts):
-        parse_instruction(i, label_dict);
+        try:
+            parse_instruction(i, label_dict);
+        except:
+            print(program[i])
+            raise "DEAD ASSEMBLER LOL"
+
 
     if (num_insts < 512):
         print("");
