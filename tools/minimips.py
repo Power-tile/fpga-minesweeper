@@ -996,10 +996,6 @@ def cycle():
         alt_pc = make8Bit(PC + imm + 2, False)
         if (int(registers[rs]) < 0):
             take_alt_pc = True
-    elif (instruction == 'JUMP'):
-        addr = int(instr[1]) << 1
-        alt_pc = make8Bit(addr, False)
-        take_alt_pc = True
     elif (instruction == 'ADD'):
         rd = regDecode(instr[1])
         rs = regDecode(instr[2])
