@@ -5,76 +5,73 @@
 `define OP_D        3'b110
 `define OP_L        3'b111
 
-// Code your testbench here
 module ClickAction(inbtnC, indblbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch, Action);
-input inbtnC, indblbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch;
-output[2:0] Action;
-wire[2:0] goOut, IsDouble;
+    input inbtnC, indblbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch;
+    output[2:0] Action;
+    
+    wire[2:0] goOut, IsDouble;
     mux2v #(3) muxIsDouble(IsDouble, 3'b001, 3'b010, DbleClkSwitch);
     mux2v #(3) muxIsClicked(Action, goOut, IsDouble, inbtnC);
-    endmodule
-// or browse Examples
-module clicker(inbtnC, indblbtnC, inU, inR, inD, inL, ACK, goOut);
+endmodule
+
+module clicker(inbtnC, inU, inR, inD, inL, ACK, goOut);
 // 000 - No input, 001 - single btnC click, 010 - double btnC, 100/101/110/111 - U/R/D/L btn click
-// inputs
-input inbtnC, indblbtnC, inU, inR, inD, inL, ACK;
-// outputs
-output[2:0] goOut;
+    // inputs
+    input inbtnC, inU, inR, inD, inL, ACK;
+    // outputs
+    output[2:0] goOut;
 
-// reg and internal variable definitions
-wire [2:0] firstRes, currBtnOut, secondRes;
-// COME BACK TO THIS wire
-wire firstRes3to1, CTBtnOut;
-wire secondRes3to1;
+    // reg and internal variable definitions
+    wire [2:0] firstRes, currBtnOut, secondRes;
+    // COME BACK TO THIS wire
+    wire firstRes3to1, CTBtnOut;
+    wire secondRes3to1;
 
-assign firstRes = inbtnC == 1'b1 ? 3'b001 
-: indblbtnC == 1'b1 ? 3'b010 
-: inU == 1'b1 ? 3'b100 
-: inR == 1'b1 ? 3'b101 
-: inD == 1'b1 ? 3'b110 
-: inL == 1'b1 ? 3'b111
-: 3'b000;
-assign firstRes3to1 = firstRes[2] | (firstRes[1] | firstRes[0]);
-dff_behavioral #(3) SingleClick(firstRes, firstRes3to1, ACK, currBtnOut);
+    assign firstRes = inbtnC == 1'b1 ? 3'b001 
+                    : inU == 1'b1 ? 3'b100 
+                    : inR == 1'b1 ? 3'b101 
+                    : inD == 1'b1 ? 3'b110 
+                    : inL == 1'b1 ? 3'b111
+                    : 3'b000;
+    assign firstRes3to1 = firstRes[2] | firstRes[1] | firstRes[0];
+    dff_behavioral #(3) SingleClick(firstRes, firstRes3to1, ACK, currBtnOut);
 
-// assign secondRes = (1'b1 == 1'b1) ? 3'b000 : ((inbtnC == 1'b1) ? 3'b001 : ((indblbtnC == 1'b1) ? 3'b010 : ((inU == 1'b1) ? 3'b100 : ((inR == 1'b1) ? 3'b101 : ((inD == 1'b1) ? 3'b110 : ((inL == 1'b1) ? 3'b111))))));
-// assign secondRes3to1 = ~(secondRes[2] | (secondRes[1] | secondRes[0]));
-checkTwo #(1) mux8v(secondzRes3to1, 1'b1, inbtnC, indblbtnC, 1'b1, inU, inR, inD, inL, currBtnOut);
+    checkTwo #(1) mux8v(secondzRes3to1, 1'b1, inbtnC, 1'b1, 1'b1, inU, inR, inD, inL, currBtnOut);
 
-ClickDetect #(1) dff_behavioral_WEnable(1'b1, secondRes3to1, 1'b1, ACK, CTBtnOut);
-assign goOut = {2'b00, CTBtnOut} && currBtnOut;
-
+    ClickDetect #(1) dff_behavioral_WEnable(1'b1, secondRes3to1, 1'b1, ACK, CTBtnOut);
+    assign goOut = {CTBtnOut, CTBtnOut, CTBtnOut} & currBtnOut;
 endmodule
 
 
 
 module dff_behavioral(d,clk,clear,q,qbar); 
-input d, clk, clear; 
-output reg q, qbar; 
-always@(posedge clk) 
-begin
-if(clear== 1) begin
-    q <= 0;
-    qbar <= 1;
-end else 
-    q <= d; 
-    qbar = !d; 
+    input d, clk, clear; 
+    output reg q, qbar; 
+    always@(posedge clk) 
+    begin
+        if (clear== 1) begin
+            q <= 0;
+            qbar <= 1;
+        end else begin
+            q <= d; 
+            qbar = !d; 
+        end
     end 
 endmodule
 
 module dff_behavioral_WEnable(d,clk,enable,clear,q,qbar); 
-input d, clk, clear, enable; 
-output reg q, qbar; 
-always@(posedge clk) 
-begin
-if(clear== 1) begin
-    q <= 0;
-    qbar <= 1;
-end else if(enable == 1) begin
-    q <= d; 
-    qbar = !d; 
-    end else
-    q <= q; 
+    input d, clk, clear, enable; 
+    output reg q, qbar; 
+    always@(posedge clk) 
+    begin
+        if(clear== 1) begin
+            q <= 0;
+            qbar <= 1;
+        end else if(enable == 1) begin
+            q <= d; 
+            qbar = !d; 
+        end else
+            q <= q; 
     end
 endmodule
 
