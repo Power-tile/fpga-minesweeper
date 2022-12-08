@@ -57,8 +57,8 @@ def Game(map,moves):
                 if player_cell == '-' or (player_cell == '?' and game_cell != 'X'):
                     Won = False
                     break # jump out of the double loop
-                else:
-                    break
+            else:
+                break
         ack = 0
 
         move = 0       

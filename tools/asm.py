@@ -102,7 +102,7 @@ def main():
     for i in range(num_insts):
         inst = program[i]
         if inst.find(comment_char) != -1: # Strip comment
-            program[i] = inst.split(comment_char)[0]
+            program[i] = inst.split(comment_char)[0].strip()
         
         inst = program[i].strip()
         if len(inst) == 0: # Empty line
@@ -116,7 +116,7 @@ def main():
         
         currIdx += 1
     
-    program = list(inst for inst in program if len(inst) > 0)
+    program = list(inst.strip() for inst in program if len(inst) > 0)
     
     num_insts = len(program)
     for i in range(0, num_insts):
