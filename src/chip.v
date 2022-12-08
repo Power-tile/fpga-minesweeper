@@ -54,6 +54,8 @@ iramHRM leProgramToRun(
   .Q(Iin)
 );
 
+wire [0:511] msg;
+
 dram memoriesPressedBetweenThePagesOfMyMind(
   .CLK(cpuClk),
   .RESET(btnC),
@@ -68,7 +70,8 @@ dram memoriesPressedBetweenThePagesOfMyMind(
   .IOE(IOE),
   .IOF(IOF),
   .IOG(IOG),
-  .IOH(IOH)
+  .IOH(IOH),
+  .dispMsg(msg)
 );
 
 
@@ -82,8 +85,8 @@ var_clk clockGenerator(
 
 
 // LED ARRAY LOGIC
-assign led[15:8] = IOD;
-assign led[7:0]  = IOC;
+//assign led[15:8] = IOD;
+//assign led[7:0]  = IOC;
 
   
 // SEVEN-SEGMENT DISPLAY DRIVERS
@@ -91,12 +94,8 @@ assign led[7:0]  = IOC;
 DisplayRotator dispRot(clk, sw[13], IOG[3:0], IOG[7:4], IOH[3:0], IOH[7:4], IOE[3:0], IOE[7:4], IOF[3:0], IOF[7:4], an, dpEnable, currentDigit);
 HexToLED hexConverter(currentDigit, seg);
 
-wire [0:511] msg = "  TEST MESSAGE  *CS 233  HONORS*THIS OLED STUPID  IS WORKING?!  ";
-wire [0:1] hlX = 2'b01;
-wire [0:3] hlY = 4'b0;
-
 // OLED Driver
-PmodOLEDDemo oled(.clk(clk), .reset(btnC), .enable(btnU), .CS(CS), .SDIN(SDIN), .SCLK(SCLK), .DC(DC), .RES(RES), .VBAT(VBAT), .VDD(VDD), .led(),
-                  .msg(msg), .hlX(hlX), .hlY(hlY));
+PmodOLEDDemo oled(.clk(clk), .reset(btnC), .enable(btnU), .CS(CS), .SDIN(SDIN), .SCLK(SCLK), .DC(DC), .RES(RES), .VBAT(VBAT), .VDD(VDD), .led(led),
+                  .msg(msg));
 
 endmodule

@@ -149,9 +149,9 @@ module OLEDInterface(
 						// Do driver and Do nothing when finished
 						"OledWait" : begin
 						    led <= 16'b100;
-							if(enable == 1'b1) begin
+							// if(enable == 1'b1) begin
 								current_state <= "OledDriver";
-							end
+							// end
 						end
 						// Do driver and wait to refresh screen when finished
 						"OledDriver" : begin

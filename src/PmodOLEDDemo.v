@@ -23,9 +23,7 @@ module PmodOLEDDemo(
 		VBAT,
 		VDD,
 		led,
-		msg,
-		hlX,
-		hlY
+		msg
     );
 
 	// port declarations
@@ -34,8 +32,6 @@ module PmodOLEDDemo(
 	input  reset;
 	input  enable;
 	input  [0:511] msg;
-	input  [0:1] hlX; // 0~3 row
-	input  [0:3] hlY; // 0~15 col
 	
 	output CS;
 	output SDIN;
@@ -52,7 +48,6 @@ module PmodOLEDDemo(
 	wire CS, SDIN, SCLK, DC;
 	wire VDD, VBAT, RES;
 
-	wire [15:0]  led;
 	reg [110:0] current_state = "Idle";
 
 	wire done;
@@ -61,6 +56,8 @@ module PmodOLEDDemo(
 	reg [0:127] row1;
 	reg [0:127] row2;
 	reg [0:127] row3;
+	
+	reg [15:0] led;
     
 	
 	// interface that initializes and updates the OLED display
@@ -85,7 +82,6 @@ module PmodOLEDDemo(
 		.led()
 	);
 
-	assign led = 1 << (hlY << 3);
 //	$display("%0h", 1 << (hlY << 3));
 
 	//  state machine to send new messages to OLED
@@ -98,19 +94,22 @@ module PmodOLEDDemo(
 					case(current_state)
 					    // wait for enable to be pressed and prepare message
 						"Wait" : begin
+						    $display("Wait");
 							current_state <= "OledUpdate";
 							// row0 = "  TEST Message  ";
 							// row1 = "*CS 233  HONORS*";
 							// row2 = "This OLED screen";
 							// row3 = "  is working?!  ";
-							row0 = msg[0:127];
-							row1 = msg[128:255];
-							row2 = msg[256:383];
-							row3 = msg[384:511];
+							row0 <= msg[0:127];
+							row1 <= msg[128:255];
+							row2 <= msg[256:383];
+							row3 <= msg[384:511];
+							led <= 16'b1;
 				 		end
 						
   					   // send text to the screen
 						"OledUpdate" : begin
+						    led <= 16'b10;
 							if(done == 1'b1) begin
 									current_state <= "Wait";
 							end
@@ -118,6 +117,7 @@ module PmodOLEDDemo(
 						
 						// do nothing
 						"Done" : begin
+						    led <= 16'b100;
 							current_state <= "Done";
 						end
 						
