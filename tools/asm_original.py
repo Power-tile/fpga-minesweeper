@@ -39,13 +39,6 @@ def immString(imm):
      if (imm < 0):
         imm += 64
      return "{0:{fill}6b}".format(int(imm), fill='0')
- 
- # Added for jump immediate
-def immStringJUMP(imm):
-    assert (imm >= -256 and imm <= 255), "Immediate %d out of range" % imm
-    if (imm < 0):
-       imm += 512
-    return "{0:{fill}9b}".format(int(imm), fill='0')
      
 
 ########################
@@ -79,48 +72,28 @@ def main():
 
     print("  input           CLK;");
     print("  input           RESET;");
-    print("  input  [9:0]  ADDR;");
+    print("  input  [7:0]  ADDR;");
     print("  output [15:0] Q;");
     print("");
-    print("  reg     [15:0] mem[0:511]; // instruction memory with 16 bit entries");
+    print("  reg     [15:0] mem[0:127]; // instruction memory with 16 bit entries");
     print("");
-    print("  wire    [8:0]  saddr;");
+    print("  wire    [6:0]  saddr;");
     print("  integer        i;");
     print("");
     print("");
-    print("  assign saddr = ADDR[9:1];");
+    print("  assign saddr = ADDR[7:1];");
     print("  assign Q = mem[saddr];");
     print("");
     print("  always @(posedge CLK) begin");
     print("     if(RESET) begin");
 
-
-    label_dict = dict()
-
-    comment_char = ";"
-    for i in range(num_insts):
-        inst = program[i]
-        if inst.find(comment_char) != -1: # Strip comment
-            program[i] = inst.split(comment_char)[0]
-        
-        inst = program[i].strip()
-        if len(inst) == 0: # Empty line
-            program[i] = ""
-            continue
-
-        if inst[-1] == ":": # Label
-            label_dict[inst[:-1]] = i
-            program[i] = ""
-    program = list(inst for inst in program if len(inst) > 0)
-    
-    num_insts = len(program)
     for i in range(0, num_insts):
-        parse_instruction(i, label_dict);
+        parse_instruction(i);
 
-    if (num_insts < 512):
+    if (num_insts < 127):
         print("");
-        print("        for(i = " + str(num_insts) + "; i < 512; i = i + 1) begin");
-        print("          mem[i] <= 16'b0000000000000000;");
+        print("        for(i = " + str(num_insts) + "; i < 128; i = i + 1) begin");
+        print("         mem[i] <= 16'b0000000000000000;");
         print("        end");
 
     print("     end");
@@ -134,8 +107,8 @@ def usage():
     exit();
 
 # Generate one instruction
-def parse_instruction(lineNum, label_dict):
-    assert (lineNum < 255), "Too many instructions - can only have 255 total."
+def parse_instruction(lineNum):
+    assert (lineNum < 128), "Too many instructions - can only have 128 total."
 
     instr = program[lineNum]
 
@@ -159,13 +132,6 @@ def parse_instruction(lineNum, label_dict):
         print("0000000000000000", end = '');
     elif (instruction == 'HALT'):
         print("0000000000000001", end = '');
-    elif (instruction == 'JUMP'):
-        if (instr[1].isdigit()):
-            imm = int(instr[1])
-        else:
-            imm = int(label_dict[instr[1]])
-        program[lineNum] += "[{}]".format(imm)
-        print("0001" + "000" + immStringJUMP(imm), end = '');
     elif (instruction == 'LB'):
         #Extra decoding
         instr[2] = instr[2].strip(')')
@@ -203,36 +169,20 @@ def parse_instruction(lineNum, label_dict):
     elif (instruction == 'BEQ'):
         rt = instr[1]
         rs = instr[2]
-        if (instr[3].isdigit()):
-            imm = int(instr[3])
-        else:
-            imm = label_dict[instr[3]] - lineNum - 1
-        program[lineNum] += "[{}]".format(imm)
+        imm = int(instr[3])
         print("1000" + regString(rs) + regString(rt) + immString(imm), end = '');
     elif (instruction == 'BNE'):
         rt = instr[1]
         rs = instr[2]
-        if (instr[3].isdigit()):
-            imm = int(instr[3])
-        else:
-            imm = label_dict[instr[3]] - lineNum - 1
-        program[lineNum] += "[{}]".format(imm)
+        imm = int(instr[3])
         print("1001" + regString(rs) + regString(rt) + immString(imm), end = '');
     elif (instruction == 'BGEZ'):
         rs = instr[1]
-        if (instr[2].isdigit()):
-            imm = int(instr[2])
-        else:
-            imm = label_dict[instr[2]] - lineNum - 1
-        program[lineNum] += "[{}]".format(imm)
+        imm = int(instr[2])
         print("1010" + regString(rs) + "000" + immString(imm), end = '');
     elif (instruction == 'BLTZ'):
         rs = instr[1]
-        if (instr[2].isdigit()):
-            imm = int(instr[2])
-        else:
-            imm = label_dict[instr[2]] - lineNum - 1
-        program[lineNum] += "[{}]".format(imm)
+        imm = int(instr[2])
         print("1011" + regString(rs) + "000" + immString(imm), end = '');
     elif (instruction == 'ADD'):
         rd = instr[1]
@@ -269,7 +219,7 @@ def parse_instruction(lineNum, label_dict):
     else:
         raise Exception('Unknown Instruction: %s' % (instruction))
     
-    print(";    // " + program[lineNum][:-1] + program[lineNum][-1].strip());
+    print(";    // " + program[lineNum][:-1]);
 
 
 main();
