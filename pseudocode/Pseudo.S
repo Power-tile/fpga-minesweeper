@@ -60,12 +60,17 @@ JUMP for
 for_end:
 
 
-;        ack = 0; TODO ACKNOWLEDGE
+;        ack = 0;
+ADDI $7, $0, -9; ACK 
+SB $0, 0($7)
 
-;        move = 0; TODO LOAD MOVE
-     
+;        LOAD move;
+ADDI $7, $7, -1;
+LB $4, 0($7)
+SB $4, -1($0)
+
 ;        if Won == False:
-BEQ $3, $0, continue_main_if
+BEQ $4, $0, continue_main_if
 JUMP main_else
 continue_main_if:
 
@@ -76,11 +81,14 @@ JUMP while
 
 continue_mini_if:
 ;            player_map[x][y][7] = 0
-SRL $7, $1; x*2
-SRL $7, $7
-SRL $7, $7
-SRL $7, $7; x*16
+SLL $7, $1; x*2
+SLL $7, $7
+SLL $7, $7
+SLL $7, $7; x*16
 ADD $7, $7, $2; x*16+y
+ADDI $7, $7, 30
+ADDI $7, $7, 30
+ADDI $7, $7, 2
 LB $5, 0($7); player_map[x][y]
 ADDI $6, $0, -1; create 127
 SRL $6, $6
@@ -130,11 +138,14 @@ BEQ $4, $7, continue_elif_4
 JUMP elif_5
 continue_elif_4:
 
-SRL $7, $1; x*2
-SRL $7, $7
-SRL $7, $7
-SRL $7, $7; x*16
+SLL $7, $1; x*2
+SLL $7, $7
+SLL $7, $7
+SLL $7, $7; x*16
 ADD $7, $7, $2; x*16+y
+ADDI $7, $7, 30
+ADDI $7, $7, 30
+ADDI $7, $7, 2
 LB $6, 0($7); player_map[x][y]
 SLL $6, $6
 SRL $6, $6
@@ -167,10 +178,10 @@ elif_5:
 ADDI $7, $0, 2
 BNE $4, $7, elif_done
 ;                player_map[x][y] = minesweeper_map[x][y]
-SRL $7, $1; x*2
-SRL $7, $7
-SRL $7, $7
-SRL $7, $7; x*16
+SLL $7, $1; x*2
+SLL $7, $7
+SLL $7, $7
+SLL $7, $7; x*16
 ADD $7, $7, $2; x*16+y
 
 ADDI $7, $7, 30; &minesweeper_map[x][y]
@@ -184,25 +195,37 @@ SB $6, 0($7)
 
 elif_done:
 ;           player_map[x][y][7] = 1
-SRL $7, $1; x*2
-SRL $7, $7
-SRL $7, $7
-SRL $7, $7; x*16
+SLL $7, $1; x*2
+SLL $7, $7
+SLL $7, $7
+SLL $7, $7; x*16
 ADD $7, $7, $2; x*16+y
+ADDI $7, $7, 30
+ADDI $7, $7, 30
+ADDI $7, $7, 2
 LB $6, 0($7)
 ORI $6, $6, -1
 SB $6, 0($7)
 
-;            ack = 1 ; TODO ACKNOWLEDGE
+; DEBUG PURPOSES DELETE
+; HALT
 
-SRL $7, $1; x*2
-SRL $7, $7
-SRL $7, $7
-SRL $7, $7; x*16
+;            ack = 1
+ADDI $7, $0, -9; ACK 
+ADDI $6, $0, 15
+SB $6, 0($7)
+
+SLL $7, $1; x*2
+SLL $7, $7
+SLL $7, $7
+SLL $7, $7; x*16
 ADD $7, $7, $2; x*16+y
+ADDI $7, $7, 30
+ADDI $7, $7, 30
+ADDI $7, $7, 2
+LB $6, 0($7)
 SLL $6, $6
 SRL $6, $6
-LB $6, 0($7)
 ADDI $7, $0, 30; X = 88
 ADDI $7, $0, 30
 ADDI $7, $0, 28
@@ -215,8 +238,11 @@ not_dead:
 JUMP while
 
 main_else: ; won
+ADDI $7, $0, 2
+SB $7, -2(R0)
+game_won:
+JUMP game_won
 ;        else:
-;            ; TODO SET SOME GLOBAL WON FLAG
 ;           for row in player_map: ; DONT BOTHER
 ;                print("".join(str(cell) for cell in row))
 ;                print("")
@@ -224,7 +250,11 @@ main_else: ; won
 ;            break
 ;    return x, y, dead, player_map
 end:
-HALT 
+
+ADDI $7, $0, 6
+SB $7, -2(R0)
+game_dead:
+JUMP game_dead
 ;; Start of Program
 ;; if __name__ == "__main__":
 ;;     try:

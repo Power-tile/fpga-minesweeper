@@ -923,6 +923,7 @@ def cycle():
     alt_pc = 0
     halted = False;
  
+    instr = instr.split(":")[-1]
     instr = instr.split()
     #INSTR ANY_SPACE R_1 COMMA R_2 COMMA RANDOM 
    
@@ -931,6 +932,10 @@ def cycle():
         rd = 0
         rs = 0
         rt = 0
+    elif (instruction == 'JUMP'):
+        imm = signExtend(int(instr[1])) << 1
+        alt_pc = make8Bit(imm, False)
+        take_alt_pc = True
     elif (instruction == 'HALT'):
         halted = True;
         # input('HALT: Press any key to continue')

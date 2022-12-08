@@ -39,7 +39,7 @@ module click_detector(inbtnC, inU, inR, inD, inL, ACK, goOut);
 
     mux8v #(1) m8(secondzRes3to1, 1'b1, inbtnC, 1'b1, 1'b1, inU, inR, inD, inL, currBtnOut);
 
-    dff_behavioral_WEnable #(1) ClickDetect(1'b1, secondRes3to1, 1'b1, ACK, CTBtnOut);
+    dff_behavioral_WEnable #(1) ClickDetect(1'b1, ~secondRes3to1, 1'b1, ACK, CTBtnOut);
     assign goOut = {CTBtnOut, CTBtnOut, CTBtnOut} & currBtnOut;
 endmodule
 

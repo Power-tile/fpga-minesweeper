@@ -135,7 +135,7 @@ def main():
             else:
                 print("");
         elif (op == "0001"):
-            print("JUMP    %d" % (instr[7:16]));
+            print("JUMP    %d" % int(instr[7:], 2));
         elif (op == "0010"):
             print("LB    R%d, %d(R%d)" % (reg2, imm, reg1));
         elif (op == "0100"):

@@ -6,5 +6,5 @@ ADDI $1, $1, 1
 ADDI $1, $1, 1
 ADDI $1, $1, 1
 ADDI $1, $1, 1
-SB R1, -1(R0)
+SB $1, -1($0)
 HALT
