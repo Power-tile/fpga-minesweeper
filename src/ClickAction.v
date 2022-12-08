@@ -5,20 +5,20 @@
 `define OP_D        3'b110
 `define OP_L        3'b111
 
-module ClickAction(inbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch, Action);
-    input inbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch;
+module ClickAction(clk, inbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch, Action);
+    input clk, inbtnC, inU, inR, inD, inL, ACK, DbleClkSwitch;
     output[2:0] Action;
     
     wire[2:0] goOut, IsDouble;
     mux2v #(3) muxIsDouble(IsDouble, 3'b001, 3'b010, DbleClkSwitch);
     mux2v #(3) muxIsClicked(Action, goOut, IsDouble, inbtnC);
-    click_detector cd(inbtnC, inU, inR, inD, inL, ACK, goOut);
+    click_detector cd(clk, inbtnC, inU, inR, inD, inL, ACK, goOut);
 endmodule
 
-module click_detector(inbtnC, inU, inR, inD, inL, ACK, goOut);
+module click_detector(clk, inbtnC, inU, inR, inD, inL, ACK, goOut);
 // 000 - No input, 001 - single btnC click, 010 - double btnC, 100/101/110/111 - U/R/D/L btn click
     // inputs
-    input inbtnC, inU, inR, inD, inL, ACK;
+    input clk, inbtnC, inU, inR, inD, inL, ACK;
     // outputs
     output[2:0] goOut;
 
@@ -35,11 +35,11 @@ module click_detector(inbtnC, inU, inR, inD, inL, ACK, goOut);
                     : inL == 1'b1 ? 3'b111
                     : 3'b000;
     assign firstRes3to1 = firstRes[2] | firstRes[1] | firstRes[0];
-    dff_behavioral #(3) SingleClick(firstRes, firstRes3to1, ACK, currBtnOut);
+    dff_behavioral #(3) SingleClick(firstRes, clk, ACK, currBtnOut);
 
     mux8v #(1) m8(secondzRes3to1, 1'b1, inbtnC, 1'b1, 1'b1, inU, inR, inD, inL, currBtnOut);
 
-    dff_behavioral_WEnable #(1) ClickDetect(1'b1, ~secondRes3to1, 1'b1, ACK, CTBtnOut);
+    dff_behavioral_WEnable #(1) ClickDetect(1'b1, secondRes3to1, 1'b1, ACK, CTBtnOut);
     assign goOut = {CTBtnOut, CTBtnOut, CTBtnOut} & currBtnOut;
 endmodule
 

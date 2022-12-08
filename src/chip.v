@@ -57,7 +57,8 @@ iramHRM leProgramToRun(
 wire [0:511] msg;
 wire [7:0] ack;
 wire [2:0] action;
-ClickAction ca(btnC, btnU, btnR, btnD, btnL, ack[0], sw[1], action);
+ClickAction ca(clk, btnC, btnU, btnR, btnD, btnL, ack[0], sw[1], action);
+assign led[2:0] = action;
 
 dram memoriesPressedBetweenThePagesOfMyMind(
   .CLK(cpuClk),
@@ -93,14 +94,13 @@ var_clk clockGenerator(
 //assign led[15:8] = IOD;
 //assign led[7:0]  = IOC;
 
-  
 // SEVEN-SEGMENT DISPLAY DRIVERS
   
 DisplayRotator dispRot(clk, sw[13], IOG[3:0], IOG[7:4], IOH[3:0], IOH[7:4], IOE[3:0], IOE[7:4], IOF[3:0], IOF[7:4], an, dpEnable, currentDigit);
 HexToLED hexConverter(currentDigit, seg);
 
 // OLED Driver
-PmodOLEDDemo oled(.clk(clk), .reset(sw[0]), .enable(), .CS(CS), .SDIN(SDIN), .SCLK(SCLK), .DC(DC), .RES(RES), .VBAT(VBAT), .VDD(VDD), .led(led),
+PmodOLEDDemo oled(.clk(clk), .reset(sw[0]), .enable(), .CS(CS), .SDIN(SDIN), .SCLK(SCLK), .DC(DC), .RES(RES), .VBAT(VBAT), .VDD(VDD), .led(),
                   .msg(msg));
 
 endmodule
