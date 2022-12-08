@@ -65,7 +65,9 @@ def Game(map,moves):
         if Won == False:
             if move == 0: # move comes from click detector output
                 continue
-            elif (move == 7 and y-1 >= 0): # L(111)
+
+            player_map[x][y][7] = 0 # set highest bit to 0
+            if (move == 7 and y-1 >= 0): # L(111)
                 y -= 1
             elif (move == 5 and y+1 < n): # R(101)
                 y += 1
@@ -75,11 +77,13 @@ def Game(map,moves):
                 x += 1
             elif (move == 1): # single btnC click(001)
                 if player_map[x][y] == '?':
-                    player_map[x][y] = '-'
-                elif player_map[x][y] == '-':
+                    player_map[x][y] = ' '
+                elif player_map[x][y] == ' ':
                     player_map[x][y] = '?'
             elif (move == 2): # double click on center(010)
                 player_map[x][y] = minesweeper_map[x][y]
+            
+            player_map[x][y][7] = 1 # set highest bit to 1
 
             ack = 1 # acknowledge
             # TODO write current x and y coordinate to MMIO for highlighting
