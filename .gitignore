@@ -5,3 +5,5 @@ fpga-minesweeper.ip_user_files/**
 fpga-minesweeper.cache/**
 .vscode/**
 __pycache__/**
+**/_test_.py
+**/test
