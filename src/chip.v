@@ -55,6 +55,9 @@ iramHRM leProgramToRun(
 );
 
 wire [0:511] msg;
+wire [7:0] ack;
+wire [2:0] action;
+ClickAction ca(btnC, btnU, btnR, btnD, btnL, ack[0], sw[1], action);
 
 dram memoriesPressedBetweenThePagesOfMyMind(
   .CLK(cpuClk),
@@ -71,7 +74,9 @@ dram memoriesPressedBetweenThePagesOfMyMind(
   .IOF(IOF),
   .IOG(IOG),
   .IOH(IOH),
-  .dispMsg(msg)
+  .dispMsg(msg),
+  .ack(ack),
+  .action({5'b0, action})
 );
 
 
@@ -95,7 +100,7 @@ DisplayRotator dispRot(clk, sw[13], IOG[3:0], IOG[7:4], IOH[3:0], IOH[7:4], IOE[
 HexToLED hexConverter(currentDigit, seg);
 
 // OLED Driver
-PmodOLEDDemo oled(.clk(clk), .reset(btnC), .enable(btnU), .CS(CS), .SDIN(SDIN), .SCLK(SCLK), .DC(DC), .RES(RES), .VBAT(VBAT), .VDD(VDD), .led(led),
+PmodOLEDDemo oled(.clk(clk), .reset(sw[0]), .enable(), .CS(CS), .SDIN(SDIN), .SCLK(SCLK), .DC(DC), .RES(RES), .VBAT(VBAT), .VDD(VDD), .led(led),
                   .msg(msg));
 
 endmodule

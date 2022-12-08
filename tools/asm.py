@@ -75,7 +75,7 @@ def main():
     if(len(sys.argv) > 2):
         print("module " + sys.argv[2] + "(CLK, RESET, ADDR, Q);");
     else:
-        print("module iram(CLK, RESET, ADDR, Q);");
+        print("module iramHRM(CLK, RESET, ADDR, Q);");
 
     print("  input           CLK;");
     print("  input           RESET;");

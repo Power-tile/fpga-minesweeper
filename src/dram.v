@@ -1,10 +1,12 @@
-module dram(CLK, RESET, ADDR, DATA, MW, Q, IOA, IOB, IOC, IOD, IOE, IOF, IOG, IOH, dispMsg);
+module dram(CLK, RESET, ADDR, DATA, MW, Q, IOA, IOB, IOC, IOD, IOE, IOF, IOG, IOH, dispMsg, ack, action);
   input        CLK;
   input        RESET;
   input  [7:0] ADDR;  // 8-bit addresses
   input  [7:0] DATA;  // 8-bit data words
   input        MW;
   
+  input  [7:0] action;
+  output [7:0] ack;
   output [7:0] Q;
   input  [7:0] IOA;
   input  [7:0] IOB;
@@ -32,8 +34,11 @@ module dram(CLK, RESET, ADDR, DATA, MW, Q, IOA, IOB, IOC, IOD, IOE, IOF, IOG, IO
   end
 
   always @(posedge CLK) begin
-    // memory is currently initialized with a LUT in 2-byte BCD words
-    //   for the heart rate monitor (big endian)
+    // Minesweeper map
+    // 1X1000001X10012X
+    // 22200011211001X3
+    // 2X10001X3210012X
+    // X2100012XX100011
     if(RESET) begin
       mem[0] <= 8'b00110001; // 1
       mem[1] <= 8'b01011000; // X
@@ -180,6 +185,7 @@ module dram(CLK, RESET, ADDR, DATA, MW, Q, IOA, IOB, IOC, IOD, IOE, IOF, IOG, IO
   assign IOF = IOreg[5];
   assign IOG = IOreg[6];
   assign IOH = IOreg[7];
+  assign ack = IOreg[8][0];
   
   // Did not figure out good way to initialize this lol
   // dispMsg[511:0] = mem[127:64] did not work
@@ -255,7 +261,15 @@ module dram(CLK, RESET, ADDR, DATA, MW, Q, IOA, IOB, IOC, IOD, IOE, IOF, IOG, IO
     Q       = 8'd0;
 
     case(ADDR)
-      8'd248: begin
+      8'd246: begin // action -10
+        ADDR_IO = 9;
+        Q = action;
+      end
+      8'd247: begin // ack -9
+        ADDR_IO = 8;
+        MW_IO = MW;
+      end
+      8'd248: begin // -8
         ADDR_IO = 0;
         Q = IOA;
       end
@@ -283,7 +297,7 @@ module dram(CLK, RESET, ADDR, DATA, MW, Q, IOA, IOB, IOC, IOD, IOE, IOF, IOG, IO
         ADDR_IO = 6;
         MW_IO = MW;
       end
-      8'd255: begin
+      8'd255: begin // -1
         ADDR_IO = 7;
         MW_IO = MW;
       end
