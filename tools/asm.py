@@ -40,7 +40,7 @@ def immString(imm):
         imm += 64
      return "{0:{fill}6b}".format(int(imm), fill='0')
  
- # Added for jump immediate
+ # Added for jump immediate to allow larger numbers
 def immStringJUMP(imm):
     assert (imm >= -256 and imm <= 255), "Immediate %d out of range" % imm
     if (imm < 0):
@@ -172,7 +172,7 @@ def parse_instruction(lineNum, label_dict):
         print("0000000000000000", end = '');
     elif (instruction == 'HALT'):
         print("0000000000000001", end = '');
-    elif (instruction == 'JUMP'):
+    elif (instruction == 'JUMP'): // Added Jump Command with Labelling conversion to PC
         if (instr[1].isdigit()):
             imm = int(instr[1])
         else:
