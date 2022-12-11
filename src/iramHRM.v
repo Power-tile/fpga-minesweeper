@@ -1,7 +1,7 @@
 module iramHRM(CLK, RESET, ADDR, Q);
   input           CLK;
   input           RESET;
-  input  [9:0]  ADDR;
+  input  [9:0]  ADDR; // Enlargened for PC
   output [15:0] Q;
 
   reg     [15:0] mem[0:511]; // instruction memory with 16 bit entries
@@ -118,7 +118,7 @@ module iramHRM(CLK, RESET, ADDR, Q);
         mem[100] <= 16'b0100000110110111;    // SB R6, -9(R0)
         mem[101] <= 16'b0001000000000100;    // JUMP while[4]
 
-        for(i = 102; i < 512; i = i + 1) begin
+       for(i = 102; i < 512; i = i + 1) begin // Updated PC limit
           mem[i] <= 16'b0000000000000000;
         end
      end
