@@ -14,7 +14,7 @@ wire        cpuClk, dpEnable, MW;
 
 wire  [3:0] currentDigit;
 
-	wire  [9:0] PC, NextPC;
+	wire  [9:0] PC, NextPC; // Extended PC here to match with the extension we wanted. Used to be [7:0].
 	wire  [7:0] IOA, IOB, IOC, IOD,
 		    IOE, IOF, IOG, IOH,
 		    DataA, DataB, DataC, DataD, Din;
