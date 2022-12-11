@@ -43,6 +43,7 @@ def Game(map,moves):
     player_map = [['-' for row in range(n)] for column in range(n)]
 
 ########## IGNORE ABOVE ##########
+#We currently just use map we manually created 
     x = 0
     y = 0
     dead = False
