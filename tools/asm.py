@@ -94,7 +94,7 @@ def main():
     print("  always @(posedge CLK) begin");
     print("     if(RESET) begin");
 
-
+    # Labelling and Commenting filtering
     label_dict = dict()
 
     comment_char = ";"
@@ -172,7 +172,7 @@ def parse_instruction(lineNum, label_dict):
         print("0000000000000000", end = '');
     elif (instruction == 'HALT'):
         print("0000000000000001", end = '');
-    elif (instruction == 'JUMP'): // Added Jump Command with Labelling conversion to PC
+    elif (instruction == 'JUMP'): # Added Jump Command with Labelling conversion to PC
         if (instr[1].isdigit()):
             imm = int(instr[1])
         else:
@@ -213,7 +213,7 @@ def parse_instruction(lineNum, label_dict):
         rs = instr[2]
         imm = int(instr[3])
         print("0111" + regString(rs) + regString(rt) + immString(imm), end = '');
-    elif (instruction == 'BEQ'):
+    elif (instruction == 'BEQ'): # Regular labelling support starts here
         rt = instr[1]
         rs = instr[2]
         if (instr[3].isdigit()):

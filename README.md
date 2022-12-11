@@ -1,5 +1,25 @@
-# FPGA Minesweeper
+# FPGA Minesweeper <!-- omit from toc -->
 This is our project on implementing a Minesweeper on a Basys3 FPGA.
+
+- [File System Guideline](#file-system-guideline)
+- [Project Workflow](#project-workflow)
+- [Task Breakdown](#task-breakdown)
+    - [Nov 7 - 13](#nov-7---13)
+    - [Nov 28 - Dec 4](#nov-28---dec-4)
+
+## File System Guideline
+- `pseudocode`: Pseudocode and Assembly files for main program
+  - `Map_Generated.py` and `test.py`: pseudocode of minesweeper written and tested in python
+  - `asm.s` and `full_asm.s`: translated MiniMIPS assembly code with comments and labels
+- `src`: Verilog
+  - `chip.v`: main chip wiring
+  - `dram.v`: MMIO implementation
+  - `iramHRM.v`: PC extending and part of MMIO implementation
+  - `PModOLEDDemo.v`: MMIO-linked, constantly refreshing OLED
+- `tests`: Assembly code used for testing PC extending and label assembler support
+- `tools`: Assembler, etc. changes
+  - `asm.py`: supports PC extending, labelling, comment filtering, etc.
+  - `dis.py`: supports JUMP instruction disassembling
 
 ## Project Workflow
 - Create a branch named after the **feature**, for example `oled-api`, `extend-pc`, `map-gen`;
@@ -31,25 +51,25 @@ This is our project on implementing a Minesweeper on a Basys3 FPGA.
 
 #### Nov 28 - Dec 4
 - Hardware implementation of user input
-  - [ ] Implement a timer that counts 200ms (Verilog) - Huiyao
-  - [ ] Implement user interaction handler (Verilog) - Sankar
+  - [ ] ~~Implement a timer that counts 200ms (Verilog) - Huiyao~~
+  - [ ] ~~Implement user interaction handler (Verilog) - Sankar~~
     - Gives a single code representing current user input to MMIO
       - 000 - No input, 001 - single btnC click, 010 - double btnC, 100/101/110/111 - U/R/D/L btn click
     - Uses the timer and reads button inputs
     - After the user stops pressing the button, allows the program to "reset" the handler through MMIO to await next user input
-  - [ ] Implementing MMIO of handler - Daniel
+  - [X] Implementing MMIO of handler - Daniel
 - Assembly code for minesweeper
   - [X] Figure out how to use Saugata's PMOD OLED driver - Daniel [Thursday]
-  - [ ] Write rendering pipeline in Assembly - Daniel
-  - [ ] Update pseudocode to make logic easier - Huiyao [Thursday]
+  - [X] Write rendering pipeline in Assembly - Daniel
+  - [X] Update pseudocode to make logic easier - Huiyao ~~[Thursday]~~
     - Read from an input variable holding the user input code (see above); after you processed it, set 1 to acknowledge variable.
   - [X] Design DRAM allocation - Daniel [Thursday]
     - Map information starts from dram[64]. Each map is size 5*8, stored in row-major order. Each tile is `char` wide.
     - MMIO starts dram[128+64]. Do not write anything after this address.
     - dram[0~63] is for global variable storage. No stack is available.
-  - [ ] Change assembler to support labels in assembly code - Sankar [Thursday]
+  - [X] Change assembler to support labels in assembly code - ~~Sankar~~Daniel ~~[Thursday]~~
     - The assembler code guarantees a specific format for labels: `label_for:` and every label has a unique line.
     - Before assembling, read all the labels into a dictionary `string -> instruction number (int)` and delete labels from to-be-assembled string.
     - For jump/branch, have a special step determining label from dictionary.
-  - [ ] Write main loop logic in Assembly
+  - [X] Write main loop logic in Assembly
   - [ ] (Optional) random map generation
