@@ -5,7 +5,7 @@ module cpu(CLK, RESET, EN_L, Iin, Din, PC, NextPC, DataA, DataB, DataC, DataD, M
   input  [15:0] Iin;
   input  [7:0]  Din;
   
-	output [9:0]  PC;
+	output [9:0]  PC; // Extended PC & NextPC
 	output [9:0]  NextPC;
   output [7:0]  DataA;
   output [7:0]  DataB;
@@ -33,14 +33,14 @@ wire HALT;
 reg prevEN_L;
 
 	
-	// I added jmp
+	// I added jmp functionality below
 reg jmp;
 // BRANCH LOGIC
 always @(*) begin
 	if(HALT & (~prevEN_L | EN_L)) begin
 		NextPC <= PC;
 	end
-	else if(jmp) begin
+	else if(jmp) begin // Added JUMP case for PC
 		// Check if amount is good
 		NextPC <= {Iin[8:0], 1'b0};	
 	end
@@ -55,7 +55,7 @@ end
 
 always @(*) begin
     	case(OP)
-        // Added jmp here:
+        // Added JUMP case here:
 		4'b0001: jmp <= 1'b1;
 		default: jmp <= 1'b0;
     	endcase
